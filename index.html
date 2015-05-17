@@ -65,45 +65,48 @@
 
 	<script>	
 		function checker() {
-			//Firstly, ckecker() check if CCN contain only numbers
+			//on key up, we save the value of Credit Card Number (CCN) field. 
+			//On each key up updated value is saved.
 			card = document.getElementById("card");
 			CreditCardNumber = card.value;
-			//If true, userNumber object constructor appears
+			
+			//Then, ckecker() check if CCN contains only numbers
+			//If true, NumberSpec object constructor appears!
 			if (/^[0-9]*$/.test(CreditCardNumber)) {		
 				function NumberSpec(firstDigit, firstTwoDigits, numberOfDigits, cardType) {
 				    this.firstDigit = firstDigit;
 				    this.firstTwoDigits = firstTwoDigits;
 				    this.numberOfDigits = numberOfDigits;
-				    this.cartType = cardType
+					this.cardType = cardType
 				}
-			//Let's declare useful variables about CCN of user
-			//They will be used to assign value to our userNumber object
+				
+			//Let's declare useful variables about CCN
+			//They will be used to assign values to our userNumber and valid number object
 				firstTwoDigits = CreditCardNumber.substring(0, 2);
 				firstDigit = firstTwoDigits.charAt(0);
 				numberOfDigits = CreditCardNumber.toString().length;
 				
 				
 			//Here is userNumber and "arche-type numbers" new objects
-				var userNumber = new NumberSpec(firstDigit, firstTwoDigits, numberOfDigits);
+				var userNumber = new NumberSpec(firstDigit, firstTwoDigits, numberOfDigits, "");
 				var visaNumber = [
-					new NumberSpec(4, firstTwoDigits, 13),
-					new NumberSpec(this.firstDigit[0], firstTwoDigits, 14),
-					new NumberSpec(this.firstDigit[0], firstTwoDigits, 15),
-					new NumberSpec(this.firstDigit[0], firstTwoDigits, 16)
+					new NumberSpec(4, firstTwoDigits, 13, "Visa"),
+					new NumberSpec(this.firstDigit, firstTwoDigits, 14, this.cardType),
+					new NumberSpec(this.firstDigit, firstTwoDigits, 15, this.cardType),
+					new NumberSpec(this.firstDigit, firstTwoDigits, 16, this.cardType)
 				]
 
-				var mastercardNumber = new NumberSpec(5, firstTwoDigits, 16);
+				var mastercardNumber = new NumberSpec(5, firstTwoDigits, 16, "MasterCard");
 				var amExNumber = [
-				    new NumberSpec(3, 34, 15),
-				   	new NumberSpec(3, 37, 15)
+				    new NumberSpec(3, 34, 15, "AmEx"),
+				   	new NumberSpec(this.firstDigit, 37, this.numberOfDigits, this.cardType)
 				]
 								
-			//variables to deal with icons validity
-			//Need to construct a function to add it in #type tag
+			//variables to deal with icons of validity
 				unidentifiedIcon = ' <img class="validity-icon" src="img/unidentified.png" alt="Unidentified">';
 				unvalidIcon = ' <img class="validity-icon" src="img/unvalid.png" alt="Unvalid">';
 				noIcon = '';
-				function addIconInType() {
+				function isValidIcon() {
 					type = document.getElementById('type');
 					validIcon = ' <img class="validity-icon" src="img/valid.png" alt="Valid">';
 					
@@ -111,43 +114,43 @@
 				}
 				
 				//Identification type card & validity status			
-				//if number entered by user seems to be a Visa 
+				//if number entered by user seems to be a VISA 
 				if (userNumber.firstDigit == visaNumber[0].firstDigit){
-					type.innerHTML = 'Visa';		
-				 	// Add greenmark because it's a valid Visa number
+					type.innerHTML = visaNumber[0].cardType;		
+				 	// Add greenmark if it's a valid Visa number
 					for (i = 0 ; i < visaNumber.length ; i++) {
 						if (userNumber.numberOfDigits == visaNumber[i].numberOfDigits){
-							addIconInType();
+							isValidIcon();
 						}
 					};
 				}
 				
-				//if number entered by user seems to be a MasterCard
+				//if number entered by user seems to be a MASTERCARD
 				else if (userNumber.firstDigit == mastercardNumber.firstDigit){
-					type.innerHTML = 'Mastercard';
+					type.innerHTML = mastercardNumber.cardType;
 				
-					//Add greenmark because it's a valid Mastercard number
+					//Add greenmark if it's a valid Mastercard number
 					if (userNumber.numberOfDigits == mastercardNumber.numberOfDigits){
-						addIconInType();
+						isValidIcon();
 					}
 				}
 				
-				//if number entered by user seems to be an AmEx
+				//if number entered by user seems to be an AMEX
 				else if (userNumber.firstTwoDigits == amExNumber[0].firstTwoDigits || userNumber.firstTwoDigits == amExNumber[1].firstTwoDigits){
 						type.innerHTML = 'AmEx';
 										
-						///Add greenmark because it's a valid AmEx
-						if (userNumber.numberOfDigits == amExNumber.numberOfDigits){
-						addIconInType();
+						///Add greenmark if it's a valid AmEx
+						if (userNumber.numberOfDigits == amExNumber[0].numberOfDigits){
+						isValidIcon();
 					}
 				}
 				
-				//overwrite type of card if empty field
+				//Overwrite type of card if CCN field is empty
 				else if (userNumber.numberOfDigits == 0){
 					type.innerHTML = noIcon;
 				}				
 				
-				//finaly, if the card type isn't known, show a question mark.
+				//Finaly, if the card type isn't known, show a question mark.
 				else {
 					type.innerHTML = unidentifiedIcon;
 				}			
