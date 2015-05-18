@@ -137,7 +137,7 @@
 				
 				//if number entered by user seems to be an AMEX
 				else if (userNumber.firstTwoDigits == amExNumber[0].firstTwoDigits || userNumber.firstTwoDigits == amExNumber[1].firstTwoDigits){
-						type.innerHTML = 'AmEx';
+						type.innerHTML = amExNumber[0].cardType;
 										
 						///Add greenmark if it's a valid AmEx
 						if (userNumber.numberOfDigits == amExNumber[0].numberOfDigits){
